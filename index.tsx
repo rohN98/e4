@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
@@ -16,12 +15,12 @@ const mountApp = () => {
   };
 
   if (!rootElement) {
-    if (debugConsole) debugConsole.innerText = "FATAL: Root Element Missing";
+    if (debugConsole) debugConsole.innerText = "FATAL: Root Missing";
     return;
   }
 
   try {
-    if (debugConsole) debugConsole.innerText = "System_Link: Initializing_React...";
+    if (debugConsole) debugConsole.innerText = "System_Link: Booting...";
     
     const root = ReactDOM.createRoot(rootElement);
     root.render(
@@ -30,21 +29,21 @@ const mountApp = () => {
       </React.StrictMode>
     );
     
-    // Hide booting UI once rendered successfully
+    // Safety timeout to hide loader even if there is a minor rendering glitch
     setTimeout(() => {
       hideBoot();
-      if (debugConsole) debugConsole.innerText = "System_Link: Successful";
-    }, 500);
+      if (debugConsole) debugConsole.innerText = "System_Link: Online";
+    }, 1200);
     
   } catch (error) {
-    hideBoot(); // Show the screen so we can see the error
+    console.error("Mount failed", error);
     if (debugConsole) {
       debugConsole.style.color = '#ff2e2e';
-      debugConsole.innerText = `MOUNT_ERROR: ${error.message}`;
+      debugConsole.innerText = `ERR: ${error.message}`;
     }
-    console.error("Mount failed", error);
+    // Still hide loader so user can see error in console
+    hideBoot();
   }
 };
 
-// Start the engine
 mountApp();

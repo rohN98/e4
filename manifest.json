@@ -1,18 +1,19 @@
-
 {
   "id": "com.essential.os.nothing",
   "name": "Essential OS",
   "short_name": "Essential",
-  "description": "Nothing OS 4.0 Focus Engine for Phone (2a). Precision tools for deep work.",
+  "description": "Nothing OS 4.0 Focus Engine for Phone (2a).",
+  "lang": "en-US",
+  "dir": "ltr",
   "icons": [
     {
-      "src": "icon.jpg",
+      "src": "./icon.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "any"
     },
     {
-      "src": "icon.jpg",
+      "src": "./icon.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "maskable"
@@ -26,16 +27,15 @@
   "scope": "./",
   "categories": [
     "productivity",
-    "utilities",
-    "health"
+    "utilities"
   ],
   "screenshots": [
     {
-      "src": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1080&q=80",
-      "sizes": "1080x1920",
+      "src": "./icon.jpg",
+      "sizes": "512x512",
       "type": "image/jpeg",
       "form_factor": "narrow",
-      "label": "Focus Dashboard"
+      "label": "Home Screen"
     }
   ]
 }

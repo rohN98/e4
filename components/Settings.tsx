@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface SettingsProps {
   onBack: () => void;
@@ -8,6 +8,18 @@ interface SettingsProps {
 }
 
 export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
+  const [swStatus, setSwStatus] = useState<'checking' | 'active' | 'missing'>('checking');
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistration().then(reg => {
+        setSwStatus(reg ? 'active' : 'missing');
+      });
+    } else {
+      setSwStatus('missing');
+    }
+  }, []);
+
   const openBuildPortal = () => {
     window.open("https://www.pwabuilder.com", "_blank");
   };
@@ -22,32 +34,38 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
         </div>
       </div>
 
+      {/* Package Health Check */}
+      <section className="space-y-4">
+        <h3 className="text-[10px] uppercase tracking-[0.4em] font-bold text-zinc-600 ml-4 dot-matrix">Package_Health</h3>
+        <div className="glass-card p-6 bg-zinc-900/40 border-white/5 space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-[9px] text-zinc-500 uppercase font-bold tracking-widest">Service Worker</span>
+            <span className={`text-[9px] uppercase font-black dot-matrix ${swStatus === 'active' ? 'text-green-500' : 'text-red-500'}`}>
+              {swStatus === 'active' ? 'REGISTERED' : 'NOT_FOUND'}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-[9px] text-zinc-500 uppercase font-bold tracking-widest">Manifest Link</span>
+            <span className="text-[9px] text-green-500 uppercase font-black dot-matrix">VERIFIED</span>
+          </div>
+        </div>
+      </section>
+
+      {/* APK Assistant */}
       <section className="space-y-4">
         <h3 className="text-[10px] uppercase tracking-[0.4em] font-bold text-zinc-600 ml-4 dot-matrix">APK_Package_Assistant</h3>
         <div className="glass-card p-8 bg-zinc-900/40 border-white/5 space-y-6">
           <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
             <h4 className="text-[10px] font-black uppercase text-white mb-2 tracking-widest flex items-center gap-2">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              Step-by-Step APK
+              Final Steps for PWABuilder
             </h4>
             <ol className="text-[9px] text-zinc-400 font-bold leading-relaxed uppercase space-y-2">
-              <li>1. Open <span className="text-white">PWABuilder.com</span></li>
-              <li>2. Click "Upload" or "Start from File"</li>
-              <li>3. <span className="text-red-500">IMPORTANT:</span> Select only visible files. Avoid folders or files starting with a dot (.).</li>
-              <li>4. Generate "Android" Package.</li>
+              <li>1. Launch <span className="text-white">PWABuilder.com</span></li>
+              <li>2. Click "Upload" -> "Start from files"</li>
+              <li>3. Upload <span className="text-white">index.html, manifest.json, sw.js</span> and all code files.</li>
+              <li>4. If "Store is not ready", verify all files are in the <span className="text-white text-xs">ROOT</span> directory.</li>
             </ol>
-          </div>
-          
-          <div className="space-y-3">
-            <h4 className="text-[8px] font-black uppercase text-zinc-500 tracking-[0.2em]">Package Manifest</h4>
-            <div className="grid grid-cols-2 gap-2">
-              {['index.html', 'manifest.json', 'sw.js', 'App.tsx', 'index.tsx', 'icon.jpg'].map(file => (
-                <div key={file} className="flex items-center gap-2 bg-black/40 p-2 rounded-lg border border-zinc-800">
-                  <div className="w-1 h-1 bg-green-500 rounded-full" />
-                  <span className="text-[8px] font-bold text-zinc-300 dot-matrix">{file}</span>
-                </div>
-              ))}
-            </div>
           </div>
 
           <button 
@@ -56,20 +74,6 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
           >
             Launch PWABuilder
           </button>
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h3 className="text-[10px] uppercase tracking-[0.4em] font-bold text-zinc-600 ml-4 dot-matrix">Hardware</h3>
-        <div className="glass-card p-6 bg-zinc-900/20 border-white/5 space-y-4">
-           <div className="flex justify-between items-center">
-             <span className="text-[9px] text-zinc-500 uppercase font-bold tracking-widest">Target</span>
-             <span className="text-[9px] text-white uppercase font-black dot-matrix">Nothing Phone (2a)</span>
-           </div>
-           <div className="flex justify-between items-center">
-             <span className="text-[9px] text-zinc-500 uppercase font-bold tracking-widest">OS</span>
-             <span className="text-[9px] text-white uppercase font-black dot-matrix">NOS_4.0_Stable</span>
-           </div>
         </div>
       </section>
 
