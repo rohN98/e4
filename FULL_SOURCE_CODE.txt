@@ -1,0 +1,78 @@
+
+/* 
+  ESSENTIAL OS 4.0 - CONSOLIDATED SOURCE 
+  VERSION: 4.0.5 (PWA_STABLE)
+  DEVICE TARGET: NOTHING PHONE (2A)
+*/
+
+--- FILE: manifest.json ---
+{
+  "id": "com.essential.os.nothing",
+  "name": "Essential OS",
+  "short_name": "Essential",
+  "icons": [
+    { "src": "icon.jpg", "sizes": "512x512", "type": "image/jpeg", "purpose": "any" },
+    { "src": "icon.jpg", "sizes": "512x512", "type": "image/jpeg", "purpose": "maskable" }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "scope": "./"
+}
+
+--- FILE: sw.js ---
+const CACHE_NAME = 'essential-v6-stable';
+self.addEventListener('install', (event) => {
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(['./', './index.html', './manifest.json', './icon.jpg'])));
+});
+self.addEventListener('fetch', (event) => {
+  event.respondWith(caches.match(event.request).then(res => res || fetch(event.request)));
+});
+
+--- FILE: index.html ---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/jpeg" href="icon.jpg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { --nothing-red: #ff2e2e; --nothing-radius: 2.5rem; }
+    body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; }
+    .dot-matrix { font-family: 'Space Mono', monospace; }
+    .glass-card { background: rgba(15, 15, 15, 0.5); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: var(--nothing-radius); }
+  </style>
+</head>
+<body>
+  <div id="boot-container" style="position:fixed;inset:0;background:#000;z-index:999;display:flex;align-items:center;justify-content:center;">
+    <div class="dot-matrix" style="color:#333;font-size:10px;letter-spacing:1em;">ESSENTIAL_OS_LOADING...</div>
+  </div>
+  <div id="root"></div>
+  <script type="module" src="index.tsx"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js', { scope: './' });
+      });
+    }
+  </script>
+</body>
+</html>
+
+--- FILE: index.tsx ---
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
+const root = ReactDOM.createRoot(document.getElementById('root')!);
+root.render(<App />);
+setTimeout(() => document.getElementById('boot-container')?.remove(), 1000);
+
+--- FILE: App.tsx ---
+// Navigation logic between Dashboard, FocusFlow, Timetable, etc.
+// Uses view state to switch components within the max-w-xl container.
+// Optimized for Nothing Phone 2a safe area insets.

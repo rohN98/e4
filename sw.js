@@ -1,60 +1,62 @@
-const CACHE_NAME = 'essential-os-v8-stable';
-const OFFLINE_ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon.jpg',
-  './index.tsx',
-  './App.tsx'
+
+const CACHE_NAME = 'essential-os-v1';
+const ASSETS_TO_CACHE = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  'https://cdn.tailwindcss.com',
+  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap'
 ];
 
-// Install: Cache essential assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(OFFLINE_ASSETS);
+      console.log('[SW] Caching system cores');
+      return cache.addAll(ASSETS_TO_CACHE);
     })
   );
   self.skipWaiting();
 });
 
-// Activate: Cleanup old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+        cacheNames.map((cache) => {
+          if (cache !== CACHE_NAME) {
+            console.log('[SW] Clearing legacy cache');
+            return caches.delete(cache);
+          }
+        })
       );
     })
   );
   self.clients.claim();
 });
 
-// Fetch: Network first, fallback to cache
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
+  // Allow API calls to pass through without caching
+  if (event.request.url.includes('googleapis.com/v1/models')) {
+    return;
+  }
 
   event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        // Only cache successful standard responses
-        if (networkResponse.ok && networkResponse.status === 200) {
-          const cacheCopy = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, cacheCopy);
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request).then((fetchResponse) => {
+        // Cache new assets on the fly if they are from our origin
+        if (event.request.url.startsWith(self.location.origin)) {
+          return caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, fetchResponse.clone());
+            return fetchResponse;
           });
         }
-        return networkResponse;
-      })
-      .catch(() => {
-        return caches.match(event.request).then((cachedResponse) => {
-          if (cachedResponse) return cachedResponse;
-          
-          // If a navigation request fails, return index.html as fallback
-          if (event.request.mode === 'navigate') {
-            return caches.match('./index.html');
-          }
-        });
-      })
+        return fetchResponse;
+      });
+    }).catch(() => {
+      // Return the cached index.html for navigation requests (Offline support)
+      if (event.request.mode === 'navigate') {
+        return caches.match('/index.html');
+      }
+    })
   );
 });
