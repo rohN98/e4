@@ -5,9 +5,9 @@
   "description": "Nothing OS 4.0 Focus Engine for Phone (2a).",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/5968/5968292.png",
+      "src": "icon.jpg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "any maskable"
     }
   ],

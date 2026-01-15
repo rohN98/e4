@@ -7,19 +7,15 @@
   <meta name="theme-color" content="#000000">
   <meta name="description" content="Essential OS: Nothing OS 4.0 Focus Engine">
   
-  <!-- PWA Specific Meta Tags -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Essential">
-  <meta name="application-name" content="Essential">
-  <meta name="msapplication-TileColor" content="#000000">
   
   <title>Essential • Nothing OS</title>
   
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/5968/5968292.png">
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/5968/5968292.png">
+  <link rel="icon" type="image/jpeg" href="icon.jpg">
+  <link rel="apple-touch-icon" href="icon.jpg">
   
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -27,8 +23,7 @@
   <style>
     :root {
       --nothing-red: #ff2e2e;
-      --glass-bg: rgba(10, 10, 10, 0.8);
-      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-bg: rgba(10, 10, 10, 0.85);
       --nothing-radius: 2.5rem;
     }
     
@@ -38,10 +33,10 @@
       font-family: 'Inter', sans-serif;
       margin: 0;
       padding: 0;
-      -webkit-tap-highlight-color: transparent;
       overflow: hidden;
       height: 100vh;
       width: 100vw;
+      -webkit-tap-highlight-color: transparent;
     }
 
     #grid-bg {
@@ -70,8 +65,7 @@
     #debug-console {
       position: fixed;
       bottom: 40px;
-      left: 0;
-      right: 0;
+      left: 0; right: 0;
       text-align: center;
       font-family: 'Space Mono', monospace;
       font-size: 8px;
@@ -81,10 +75,6 @@
       letter-spacing: 0.2em;
     }
 
-    @keyframes progress-line {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
     .loader-bar {
       width: 140px;
       height: 1px;
@@ -99,40 +89,32 @@
       background: white;
       animation: progress-line 2.5s infinite linear;
     }
+    @keyframes progress-line {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
 
     .glass-card {
-      background: rgba(15, 15, 15, 0.4);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 2.5rem;
+      background: rgba(15, 15, 15, 0.5);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: var(--nothing-radius);
     }
     
-    .nothing-red { color: var(--nothing-red); }
     .nothing-red-bg { background-color: var(--nothing-red); }
-
     .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-    @keyframes nothing-fade-in {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-nothing { animation: nothing-fade-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
   </style>
 
   <script>
     window.process = { env: { API_KEY: "" } };
     
-    setTimeout(() => {
-      const boot = document.getElementById('boot-container');
-      if (boot && boot.style.opacity !== '0') {
-        const debug = document.getElementById('debug-console');
-        if (debug) {
-          debug.innerHTML = '<button onclick="window.location.reload()" style="pointer-events: auto; background: white; color: black; padding: 10px 20px; border-radius: 20px; font-weight: bold;">System Recovery</button>';
-        }
+    window.onerror = function(msg) {
+      const debug = document.getElementById('debug-console');
+      if (debug) {
+        debug.style.color = '#ff2e2e';
+        debug.innerText = `SYS_ERR: ${msg.split(' ').slice(0,3).join('_')}`;
       }
-    }, 10000);
+    };
   </script>
 
   <script type="importmap">
@@ -158,7 +140,7 @@
     <div class="loader-bar"></div>
   </div>
 
-  <div id="debug-console">Core_Init: Searching_Entry...</div>
+  <div id="debug-console">Core_Init: Booting...</div>
 
   <div id="root"></div>
 
@@ -166,15 +148,12 @@
   <script type="text/babel" src="index.tsx" data-type="module"></script>
 
   <script>
+    // Standard Service Worker Registration for PWA Builder
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then((registration) => {
-            console.log('[PWA] ServiceWorker registered:', registration.scope);
-          })
-          .catch((error) => {
-            console.error('[PWA] ServiceWorker failed:', error);
-          });
+        navigator.serviceWorker.register('./sw.js', { scope: './' })
+          .then(reg => console.log('PWA Ready:', reg.scope))
+          .catch(err => console.log('PWA Check Failed:', err));
       });
     }
   </script>

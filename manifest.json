@@ -3,24 +3,18 @@
   "id": "com.essential.os.nothing",
   "name": "Essential OS",
   "short_name": "Essential",
-  "description": "Nothing OS 4.0 Focus Engine for Phone (2a). Precision tools for deep work and clinical execution.",
+  "description": "Nothing OS 4.0 Focus Engine for Phone (2a). Precision tools for deep work.",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/5968/5968292.png",
-      "sizes": "192x192",
-      "type": "image/png",
+      "src": "icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
       "purpose": "any"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/5968/5968292.png",
+      "src": "icon.jpg",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/5968/5968292.png",
-      "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "maskable"
     }
   ],
@@ -33,8 +27,7 @@
   "categories": [
     "productivity",
     "utilities",
-    "health",
-    "finance"
+    "health"
   ],
   "screenshots": [
     {
@@ -43,25 +36,6 @@
       "type": "image/jpeg",
       "form_factor": "narrow",
       "label": "Focus Dashboard"
-    },
-    {
-      "src": "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?w=1920&q=80",
-      "sizes": "1920x1080",
-      "type": "image/jpeg",
-      "form_factor": "wide",
-      "label": "System Interface"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Start Flow",
-      "url": "./index.html?view=flow",
-      "description": "Initiate deep work session"
-    },
-    {
-      "name": "View Schedule",
-      "url": "./index.html?view=timetable",
-      "description": "Open daily ledger"
     }
   ]
 }
