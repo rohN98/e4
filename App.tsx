@@ -51,15 +51,18 @@ const App: React.FC = () => {
 
   return (
     <div className="h-full w-full bg-black flex flex-col relative overflow-hidden">
-      {/* Nothing 2a Bezel-less Status Bar Support */}
-      <header className="px-8 flex justify-between items-center z-40 relative pt-[calc(env(safe-area-inset-top)+1.5rem)] pb-4">
+      {/* 
+          Nothing Phone (2a) Optimized Header: 
+          Uses env(safe-area-inset-top) + precision spacing for centered punch-hole camera.
+      */}
+      <header className="px-8 flex justify-between items-center z-40 relative pt-[calc(env(safe-area-inset-top)+2.75rem)] pb-4">
         <div onClick={() => navigateTo('dashboard')} className="cursor-pointer active:scale-95 transition-transform group">
           <h1 className="text-xl font-black tracking-tighter dot-matrix uppercase flex items-center gap-1">
             Essential<span className={`transition-all duration-700 ${isFocusActive ? 'nothing-red animate-pulse' : 'text-zinc-900 group-hover:text-zinc-700'}`}>•</span>
           </h1>
         </div>
         <div className="flex gap-4 items-center">
-           <div className={`w-2 h-2 rounded-full ${isFocusActive ? 'nothing-red-bg shadow-[0_0_10px_red]' : 'bg-zinc-900'}`} />
+           <div className={`w-2 h-2 rounded-full ${isFocusActive ? 'nothing-red-bg shadow-[0_0_12px_rgba(255,46,46,0.8)]' : 'bg-zinc-900'}`} />
         </div>
       </header>
 
@@ -70,12 +73,12 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      {/* Nothing 2a Bezel-less Gesture Bar Support */}
+      {/* Gesture Bar Support for Nothing OS */}
       <nav className="fixed bottom-[calc(env(safe-area-inset-bottom)+1.5rem)] left-1/2 -translate-x-1/2 z-[100] w-[92%] max-w-[420px]">
-        <div className="glass-card rounded-full p-2 flex items-center justify-between shadow-[0_40px_80px_rgba(0,0,0,0.8)] border-white/5 bg-zinc-950/90 backdrop-blur-3xl">
-          <button onClick={() => navigateTo('dashboard')} className={`flex-1 py-4 rounded-full text-[9px] uppercase tracking-[0.4em] font-black transition-all ${currentView === 'dashboard' ? 'bg-white text-black' : 'text-zinc-700 hover:text-zinc-400'}`}>Core</button>
-          <button onClick={() => navigateTo('insights')} className={`flex-1 py-4 rounded-full text-[9px] uppercase tracking-[0.4em] font-black transition-all ${currentView === 'insights' ? 'bg-white text-black' : 'text-zinc-700 hover:text-zinc-400'}`}>Log</button>
-          <button onClick={() => navigateTo('flow')} className={`flex-1 py-4 rounded-full text-[9px] uppercase tracking-[0.4em] font-black transition-all ${currentView === 'flow' ? 'bg-white text-black' : 'nothing-red hover:opacity-80'}`}>Flow</button>
+        <div className="glass-card rounded-full p-2 flex items-center justify-between shadow-[0_40px_80px_rgba(0,0,0,0.9)] border-white/5 bg-zinc-950/90 backdrop-blur-3xl">
+          <button onClick={() => navigateTo('dashboard')} className={`flex-1 py-4 rounded-full text-[9px] uppercase tracking-[0.4em] font-black transition-all ${currentView === 'dashboard' ? 'bg-white text-black shadow-lg scale-[1.02]' : 'text-zinc-700 hover:text-zinc-400'}`}>Core</button>
+          <button onClick={() => navigateTo('insights')} className={`flex-1 py-4 rounded-full text-[9px] uppercase tracking-[0.4em] font-black transition-all ${currentView === 'insights' ? 'bg-white text-black shadow-lg scale-[1.02]' : 'text-zinc-700 hover:text-zinc-400'}`}>Log</button>
+          <button onClick={() => navigateTo('flow')} className={`flex-1 py-4 rounded-full text-[9px] uppercase tracking-[0.4em] font-black transition-all ${currentView === 'flow' ? 'bg-white text-black shadow-lg scale-[1.02]' : 'nothing-red hover:opacity-80'}`}>Flow</button>
           <button onClick={() => navigateTo('settings')} className={`w-12 h-12 flex items-center justify-center rounded-full transition-all active:scale-90 ${currentView === 'settings' ? 'bg-white text-black' : 'text-zinc-800 hover:text-white'}`}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>

@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { compareAsc, parse, format, isWithinInterval, addMinutes, startOfToday } from 'https://esm.sh/date-fns@4.1.0';
+import { compareAsc, parse, format, isWithinInterval, addMinutes, startOfToday } from 'date-fns';
 
 interface ScheduleItem {
   id: string;
