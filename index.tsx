@@ -1,3 +1,4 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
@@ -7,21 +8,12 @@ const mountApp = () => {
   const bootContainer = document.getElementById('boot-container');
   const debugConsole = document.getElementById('debug-console');
 
-  const hideBoot = () => {
-    if (bootContainer) {
-      bootContainer.style.opacity = '0';
-      setTimeout(() => bootContainer.remove(), 500);
-    }
-  };
-
   if (!rootElement) {
-    if (debugConsole) debugConsole.innerText = "FATAL: Root Missing";
+    if (debugConsole) debugConsole.innerText = "FATAL: Root Element Missing";
     return;
   }
 
   try {
-    if (debugConsole) debugConsole.innerText = "System_Link: Booting...";
-    
     const root = ReactDOM.createRoot(rootElement);
     root.render(
       <React.StrictMode>
@@ -29,21 +21,23 @@ const mountApp = () => {
       </React.StrictMode>
     );
     
-    // Safety timeout to hide loader even if there is a minor rendering glitch
-    setTimeout(() => {
-      hideBoot();
-      if (debugConsole) debugConsole.innerText = "System_Link: Online";
-    }, 1200);
+    // Hide booting UI once rendered
+    if (bootContainer) {
+      setTimeout(() => {
+        bootContainer.style.opacity = '0';
+        setTimeout(() => bootContainer.remove(), 500);
+      }, 800);
+    }
+    if (debugConsole) debugConsole.innerText = "System_Link: Successful";
     
   } catch (error) {
-    console.error("Mount failed", error);
     if (debugConsole) {
       debugConsole.style.color = '#ff2e2e';
-      debugConsole.innerText = `ERR: ${error.message}`;
+      debugConsole.innerText = `MOUNT_ERROR: ${error.message}`;
     }
-    // Still hide loader so user can see error in console
-    hideBoot();
+    console.error("Mount failed", error);
   }
 };
 
+// Start the engine
 mountApp();

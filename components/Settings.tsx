@@ -7,21 +7,19 @@ interface SettingsProps {
   notifyStatus: NotificationPermission;
 }
 
-export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
-  const [swStatus, setSwStatus] = useState<'checking' | 'active' | 'missing'>('checking');
+export const Settings: React.FC<SettingsProps> = ({ onBack, onNotifyRequest, notifyStatus }) => {
+  const [logs, setLogs] = useState<any[]>([]);
 
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistration().then(reg => {
-        setSwStatus(reg ? 'active' : 'missing');
-      });
-    } else {
-      setSwStatus('missing');
-    }
+    const saved = JSON.parse(localStorage.getItem('ess_logic_ledger') || '[]');
+    setLogs(saved);
   }, []);
 
-  const openBuildPortal = () => {
-    window.open("https://www.pwabuilder.com", "_blank");
+  const clearLogs = () => {
+    if(confirm("Wipe Logic Ledger?")) {
+      localStorage.removeItem('ess_logic_ledger');
+      setLogs([]);
+    }
   };
 
   return (
@@ -34,54 +32,45 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
         </div>
       </div>
 
-      {/* Package Health Check */}
+      {/* Logic Ledger Section */}
       <section className="space-y-4">
-        <h3 className="text-[10px] uppercase tracking-[0.4em] font-bold text-zinc-600 ml-4 dot-matrix">Package_Health</h3>
-        <div className="glass-card p-6 bg-zinc-900/40 border-white/5 space-y-3">
-          <div className="flex justify-between items-center">
-            <span className="text-[9px] text-zinc-500 uppercase font-bold tracking-widest">Service Worker</span>
-            <span className={`text-[9px] uppercase font-black dot-matrix ${swStatus === 'active' ? 'text-green-500' : 'text-red-500'}`}>
-              {swStatus === 'active' ? 'REGISTERED' : 'NOT_FOUND'}
-            </span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-[9px] text-zinc-500 uppercase font-bold tracking-widest">Manifest Link</span>
-            <span className="text-[9px] text-green-500 uppercase font-black dot-matrix">VERIFIED</span>
-          </div>
+        <div className="flex justify-between items-center ml-4">
+          <h3 className="text-[10px] uppercase tracking-[0.4em] font-bold text-zinc-600 dot-matrix">Logic_Ledger</h3>
+          <button onClick={clearLogs} className="text-[7px] text-zinc-800 uppercase font-black hover:text-red-500">Wipe_Archive</button>
+        </div>
+        <div className="space-y-2 max-h-[300px] overflow-y-auto no-scrollbar">
+           {logs.length === 0 ? (
+             <div className="glass-card p-8 text-center opacity-20 text-[8px] uppercase tracking-widest font-bold">No Records Captured</div>
+           ) : (
+             logs.map(log => (
+               <div key={log.id} className="glass-card p-5 space-y-2">
+                 <p className="text-xs font-medium text-white">{log.text}</p>
+                 <div className="flex justify-between items-center">
+                   <span className="text-[8px] text-zinc-700 font-bold dot-matrix">{new Date(log.time).toLocaleTimeString()}</span>
+                   <span className="text-[7px] text-zinc-800 font-black uppercase tracking-widest">Entry_{log.id.toString().slice(-4)}</span>
+                 </div>
+               </div>
+             ))
+           )}
         </div>
       </section>
 
-      {/* APK Assistant */}
-      <section className="space-y-4">
-        <h3 className="text-[10px] uppercase tracking-[0.4em] font-bold text-zinc-600 ml-4 dot-matrix">APK_Package_Assistant</h3>
-        <div className="glass-card p-8 bg-zinc-900/40 border-white/5 space-y-6">
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
-            <h4 className="text-[10px] font-black uppercase text-white mb-2 tracking-widest flex items-center gap-2">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              Final Steps for PWABuilder
-            </h4>
-            <ol className="text-[9px] text-zinc-400 font-bold leading-relaxed uppercase space-y-2">
-              <li>1. Launch <span className="text-white">PWABuilder.com</span></li>
-              <li>2. Click "Upload" -> "Start from files"</li>
-              <li>3. Upload <span className="text-white">index.html, manifest.json, sw.js</span> and all code files.</li>
-              <li>4. If "Store is not ready", verify all files are in the <span className="text-white text-xs">ROOT</span> directory.</li>
-            </ol>
-          </div>
-
-          <button 
-            onClick={openBuildPortal}
-            className="w-full py-5 bg-white text-black font-black text-[10px] uppercase tracking-[0.4em] rounded-full active:scale-95 transition-all shadow-xl"
-          >
-            Launch PWABuilder
-          </button>
-        </div>
-      </section>
+      {/* System Actions */}
+      <div className="space-y-4">
+         <h3 className="text-[10px] uppercase tracking-[0.4em] font-bold text-zinc-600 ml-4 dot-matrix">Maintenance</h3>
+         <button 
+           onClick={() => { if(confirm("Refresh Cache?")) window.location.reload(); }}
+           className="w-full py-6 glass-card text-zinc-500 font-bold text-[10px] uppercase tracking-[0.5em] active:text-white"
+         >
+           Flush System Buffer
+         </button>
+      </div>
 
       <button 
           onClick={onBack}
-          className="w-full py-6 rounded-[3rem] bg-zinc-900 text-zinc-400 font-bold uppercase text-xs tracking-[0.4em] border border-zinc-800 active:scale-95 transition-transform"
+          className="w-full py-6 rounded-[3rem] bg-white text-black font-bold uppercase text-xs tracking-[0.4em] shadow-2xl active:scale-95 transition-transform"
       >
-          Return to Core
+          Synchronize
       </button>
     </div>
   );
